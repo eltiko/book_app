@@ -2,10 +2,16 @@
   "name": "book_app",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
+=======
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> ff0f58e4b07560f08ee9c2d28e00356e8fc8baea
   },
   "repository": {
     "type": "git",
@@ -17,6 +23,7 @@
   "bugs": {
     "url": "https://github.com/eltiko/book_app/issues"
   },
+<<<<<<< HEAD
   "homepage": "https://github.com/eltiko/book_app#readme",
   "dependencies": {
     "cors": "^2.8.5",
@@ -25,4 +32,7 @@
     "express": "^4.17.1",
     "superagent": "^5.1.0"
   }
+=======
+  "homepage": "https://github.com/eltiko/book_app#readme"
+>>>>>>> ff0f58e4b07560f08ee9c2d28e00356e8fc8baea
 }
