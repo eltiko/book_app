@@ -12,7 +12,9 @@
     <p><a href="/">Home</a></p>
     <ul>
       <% searchResults.forEach( book => { %>
+        <img src="<%= book.placeholderImage %>" alt="">
       <li>Title: <%= book.title %> - Author: <%= book.author %></li>
+      <li>Description: <%= book.description %></li>
       <% }); %>
     </ul>
   </main>
