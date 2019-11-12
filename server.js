@@ -17,14 +17,13 @@ app.get('/', newSearch);
 app.post('/searches', searchForBooks);
 app.use("*", notFound);
 app.use(errorHandler);
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 //Error handling
 function notFound(req, res) {
-  res.status(404).send('Not Found');
+  res.status(404).render('pages/error');
 }
 function errorHandler(error, req, res) {
-  res.status(500).send(error);
+  res.status(500).render('pages/error');
 }
 ///=========================================================
 
@@ -35,8 +34,9 @@ function newSearch (req, res) {
 //Book constuctor 
 function Book(info) {
   this.title = info.title || 'No title available';
-  const placeholderImage = 'http://placehold.it/300x300';
+  this.placeholderImage = 'http://placehold.it/200x300';
   this.author = info.authors || 'Author(s) Not available';
+  this.description = info.description || 'Description Not available';
 }
 
 function searchForBooks(req,res) {
@@ -63,3 +63,4 @@ function searchForBooks(req,res) {
 
 }
 
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
