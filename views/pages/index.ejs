@@ -1,5 +1,5 @@
 <!DOCTYPE html>
- <html class="no-js"> 
+ <html> 
   <head>
     <title>Book Collection</title>
     <link rel="stylesheet" href="/styles/base.css">
@@ -8,11 +8,28 @@
     <header>Hello World</header>
     <main>
       <h1>This is the home page.</h1>
+      <h3>Search for A Book</h3>
+      <form action="/searches">
+        <input type="text" name="search" placeholder="Enter a title or author">
+        <fieldset>
+          <label for="title">
+            <span>Title</span>
+            <input type="radio" name="search" value="title" required>
+          </label>
+        </fieldset>
+        <fieldset>
+          <label for="author">
+            <span>author</span>
+            <input type="radio" name="search" value="author" required>
+          </label>
+        </fieldset>
+        <button type="submit">Search Google Books</button>
+      </form>
     </main>
     <footer>
 
     </footer>
-    <script src=""></script>
+    <!-- <script src=""></script> -->
   </body>
 </html>
 
