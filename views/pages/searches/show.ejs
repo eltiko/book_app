@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Collection</title>
+  <link rel="stylesheet" href="/styles/base.css">
+</head>
+
+<body>
+  <header>Hello World</header>
+  <main>
+    <h3>Search Results</h3>
+    <p><a href="/">Home</a></p>
+    <ul>
+      <% searchResults.forEach( book => { %>
+      <li>Title: <%= book.title %> - Author: <%= book.author %></li>
+      <% }); %>
+    </ul>
+  </main>
+  <footer>
+
+  </footer>
+  <!-- <script src=""></script> -->
+</body>
+
+</html>
