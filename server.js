@@ -8,14 +8,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({extended:true}));
-app.use(express.static("./public"));
+app.use(express.static(__dirname + '/public'));
 
 app.set('view engine', 'ejs');
 
 //API Routes
 app.get('/', newSearch);
 app.post('/searches', searchForBooks);
-app.use("*", notFound);
+app.use('*', notFound);
 app.use(errorHandler);
 
 //Error handling
@@ -56,7 +56,7 @@ function searchForBooks(req,res) {
   superagent
     .get(url)
     .then(apiResponse => apiResponse.body.items.map(result => new Book(result.volumeInfo)))
-    .then( results => res.status(200).render("pages/searches/show", {searchResults: results}))
+    .then( results => res.status(200).render('pages/searches/show', {searchResults: results}))
     .catch(error => errorHandler(error, req, res));
 
 // .then(results => res.render('pages/searches/show', {searchResults: results}));

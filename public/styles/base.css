@@ -1,6 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+html {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 body {
-  background-color: gray;
+  background-color: #aaa;
+  max-width: 480px;
+  margin: 0 auto;
 }
 h1 {
   color: white;
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    width: 480px;
+    margin: 0 auto;
+  }
+}
+header, main, footer, section, div {
+  text-align: center;
 }

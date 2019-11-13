@@ -1,0 +1,38 @@
+@media (max-width: 600px) {
+  .search-form {
+    width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .page-title {
+  color: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-color: #555;
+  padding: 5px;
+  margin: 0;
+  font-weight: 400;
+}
+  .book-template {
+    background-color: #fff;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+  }
+  img, button {
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  span {
+    font-weight: bold;
+  }
+  #book-title {
+    font-size: large;
+  }
+  #book-author {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+  #book-desc {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+  }
+
+}
+

@@ -2,22 +2,36 @@
 <html>
 <head>
   <title>Book Collection</title>
+  <link rel="stylesheet" href="/styles/reset.css">
   <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/layout.css">
+  <link rel="stylesheet" href="/styles/modules.css">
+  <link rel="stylesheet" href="/styles/icons.css">
+  
 </head>
 
 <body>
-  <header>Hello World</header>
-  <main>
-    <h3>Search Results</h3>
-    <p><a href="/">Home</a></p>
-    <ul>
-      <% searchResults.forEach( book => { %>
-        <img src="<%= book.placeholderImage %>" alt="">
-      <li>Title: <%= book.title %> - Author: <%= book.author %></li>
-      <li>Description: <%= book.description %></li>
-      <% }); %>
-    </ul>
-  </main>
+  <header>
+    <h1>My Bookself</h1>
+
+  </header>
+  <div class="wrapper">
+    <main>
+      <h3 class="page-title">Search Results</h3>
+      <p><a href="/">Home</a></p>
+      <div>
+        <% searchResults.forEach( book => { %>
+          <div class="book-template">
+            <img src="<%= book.placeholderImage %>" alt="">
+            <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4> 
+            <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
+            <p id="book-desc"><%= book.description.substring(0, 150) %></p>
+          </div>
+        <% }); %>
+        </div>
+    </main>
+  </div>
+  
   <footer>
 
   </footer>
