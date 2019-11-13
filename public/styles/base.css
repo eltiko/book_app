@@ -5,15 +5,14 @@ html {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 body {
-  background-color: #aaa;
-  max-width: 480px;
+  background-color: #eee;
   margin: 0 auto;
 }
 h1 {
   color: white;
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   .wrapper {
     width: 480px;
     margin: 0 auto;
@@ -21,4 +20,11 @@ h1 {
 }
 header, main, footer, section, div {
   text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .wrapper {
+    width: 960px;
+    margin: 0 auto;
+  }
 }

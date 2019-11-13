@@ -33,14 +33,15 @@ function newSearch (req, res) {
 }
 //Book constuctor 
 function Book(info) {
-  this.title = info.title || 'No title available';
-  this.placeholderImage = 'http://placehold.it/200x300';
-  this.author = info.authors || 'Author(s) Not available';
-  this.description = info.description || 'Description Not available';
+  this.title = info.volumeInfo.title || 'No title available';
+  this.id = info.id;
+  this.placeholderImage = `https://books.google.com/books?id=${info.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`;
+  this.author = info.volumeInfo.authors || 'Author(s) Not available';
+  this.description = info.volumeInfo.description || 'Description Not available';
+  // this.isbn = info.industryIdentifiers;
 }
 
 function searchForBooks(req,res) {
-
   const thingUserSearchFor = req.body.search[0];
   const typeOfSearch =  req.body.search[1];
 
@@ -55,7 +56,7 @@ function searchForBooks(req,res) {
 
   superagent
     .get(url)
-    .then(apiResponse => apiResponse.body.items.map(result => new Book(result.volumeInfo)))
+    .then(apiResponse => apiResponse.body.items.map(result => new Book(result)))
     .then( results => res.status(200).render('pages/searches/show', {searchResults: results}))
     .catch(error => errorHandler(error, req, res));
 

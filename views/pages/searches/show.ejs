@@ -12,14 +12,24 @@
 
 <body>
   <header>
-    <h1>My Bookself</h1>
+    <div class="navbar" id="navbar">
+    <h1 class="brand">My Bookself</h1>
+      <div>
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/">About</a>
+        <a class="nav-link" href="/">Contact</a>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
+    </div>
 
   </header>
   <div class="wrapper">
     <main>
       <h3 class="page-title">Search Results</h3>
-      <p><a href="/">Home</a></p>
-      <div>
+      
+      <div id="bookList">
         <% searchResults.forEach( book => { %>
           <div class="book-template">
             <img src="<%= book.placeholderImage %>" alt="">
@@ -35,7 +45,16 @@
   <footer>
 
   </footer>
-  <!-- <script src=""></script> -->
+<script>
+  function myFunction() {
+    var x = document.getElementById("navbar");
+    if (x.className === "navbar") {
+      x.className += " responsive";
+    } else {
+      x.className = "navbar";
+    }
+  }
+</script>
 </body>
 
 </html>

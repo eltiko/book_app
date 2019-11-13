@@ -1,5 +1,5 @@
 header {
-  background-color: black;
+  background-color: #f92;
   padding: 5px;
 }
 
@@ -7,11 +7,31 @@ ul {
   list-style: none;
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   .wrapper {
     display: grid;
     grid-gap: 10px;
     background-color: #aaa;
+  }
+  .topnav a:not(:first-child) {
+    display: none;
+  }
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+  .navbar.responsive {
+    position: relative;
+  }
+  .navbar.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .navbar.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
   }
   .book-template {
     border: 1px solid whitesmoke;
@@ -54,8 +74,88 @@ ul {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    width: 100%; 
+  }
+  p { 
+    font-size: 14px;
+  }
+}
+@media screen and (min-width: 768px) {
+  header {
+    padding: 5px;
     width: 100%;
+  }
+  .brand {
+    float: left;
+  }
+  .navbar {
+    overflow: hidden;
+  }
+  .navbar a {
+    float: right;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  .wrapper {
+    /* margin: 0 auto; */
+  }
+  #bookList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 
+  }
+  .book-template {
+    width: 300px;
+    border: 1px solid whitesmoke;
+    padding: 40px;
+    margin: 20px auto;
     
   }
+  #search {
+    text-align: left;
+    /* height: 90vh; */
+  }
+  input {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    line-height: 25px;
+    font-size: 18px;
+  }
+  #searchBar {
+    width: 100%;
+    
+  }
+  label {
+    line-height: 20px;
+    font-size: 18px;
+  }
+  fieldset {
+    align-items: start;
+    margin-bottom: 20px;
+    background-color: #eee;
+    border: none;
+    border-radius: 4px;
+  }
+  button {
+    padding: 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 100%;
+  }
+  p { 
+    font-size: 14px;
+  }
+
+
 }
