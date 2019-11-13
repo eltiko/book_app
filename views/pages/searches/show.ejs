@@ -30,7 +30,7 @@
       <h3 class="page-title">Search Results</h3>
       
       <div id="bookList">
-        <% searchResults.forEach( book => { %>
+        <% results.forEach( book => { %>
           <div class="book-template">
             <img src="<%= book.image_url %>" alt="Book Cover">
             <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4> 

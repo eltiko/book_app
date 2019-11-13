@@ -1,4 +1,5 @@
 'use strict';
+require("dotenv").config();
 
 const express = require('express');
 const superagent = require('superagent');
@@ -16,11 +17,10 @@ client.on("error", err => console.error(err));
 app.set('view engine', 'ejs');
 
 //API Routes
-
 app.get('/', getBooks);
 app.get('/books/:book_id', getOneBook);
 app.get('/searches', addABook);
-app.post('/searches', searchForBooks);
+app.post('/', searchForBooks);
 
 app.use('*', notFound);
 app.use(errorHandler);
@@ -36,7 +36,7 @@ function errorHandler(error, req, res) {
 function getBooks(req,res) {
   let SQL = 'SELECT * FROM books;';
   return client.query(SQL)
-    .then( results => res.render('index', {results: results.rows}))
+    .then( results => res.render('pages/searches/show', {results: results.rows}))
     .catch(err => console.log(err));
 }
 
@@ -89,16 +89,15 @@ function searchForBooks(req,res) {
   
   const thingUserSearchFor = req.body.search[0];
   const typeOfSearch =  req.body.search[1];
-  let ABC = `SELECT * FROM books WHERE ${thingUserSearchFor} = ($1) OR ($4) `;
-  let dataValue = [req.query.data]
-  client.query(ABC, dataValue).then(result => {
+  let ABC = `SELECT * FROM books WHERE title = ${thingUserSearchFor} `;
+  client.query(ABC, thingUserSearchFor).then(result => {
     if(result.rowCount) {
       console.log('Book Found!')
-      let book = new Book(req.query.data, result);
+      let book = new Book(thingUserSearchFo, result);
       res.status(200).redirect('/')
     } else {
       console.log('No Match Found')
-      
+        // let dataValue = [req.query.data];
         let url = `https://www.googleapis.com/books/v1/volumes?q=`;
 
         if (typeOfSearch === "title") {
@@ -112,7 +111,7 @@ function searchForBooks(req,res) {
           .get(url)
           .then(apiResponse => apiResponse.body.items.map(result => new Book(result)))
           .then(results =>
-            res.status(200).render("pages/index", { searchResults: results })
+            res.status(200).render("pages/searches/show", { searchResults: results })
           )
           .catch(error => errorHandler(error, req, res));
           }
