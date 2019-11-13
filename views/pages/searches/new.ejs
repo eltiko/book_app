@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Book Collection</title>
+  <link rel="stylesheet" href="/styles/reset.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/layout.css">
+  <link rel="stylesheet" href="/styles/modules.css">
+  <link rel="stylesheet" href="/styles/icons.css">
+</head>
+
+<body>
+  <header>
+    <h1>My Bookself</h1>
+  </header>
+  <main id="search">
+    <div class="wrapper">
+      <h3 class="page-title">Add Book to Your Shelf</h3>
+      <p>Search for A Book</p>
+      <div class="search-form">
+        <form action="/searches" method="post">
+          <input id="searchBar" type="text" name="search" placeholder="Enter a title or author">
+          <fieldset>
+            <label for="title">
+              <span>Title</span>
+              <input type="radio" name="search" value="title" required>
+            </label>
+          </fieldset>
+          <fieldset>
+            <label for="author">
+              <span>Author</span>
+              <input type="radio" name="search" value="author" required>
+            </label>
+          </fieldset>
+          <button type="submit">Search Google Books</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div></div>
+  </footer>
+  <!-- <script src=""></script> -->
+</body>
+
+</html>

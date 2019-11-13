@@ -1,5 +1,5 @@
 'use strict';
-require("dotenv").config();
+require('dotenv').config();
 
 const express = require('express');
 const superagent = require('superagent');
@@ -18,9 +18,9 @@ app.set('view engine', 'ejs');
 
 //API Routes
 app.get('/', getBooks);
-app.get('/books/:book_id', getOneBook);
-app.get('/searches', addABook);
-app.post('/', searchForBooks);
+app.get('/books/:id', getOneBook);
+app.get("/searches/new", getBookForm); //book search form
+app.post('/searches/new', searchForBooks); //add new book
 
 app.use('*', notFound);
 app.use(errorHandler);
@@ -29,6 +29,7 @@ app.use(errorHandler);
 function notFound(req, res) {
   res.status(404).render('pages/error');
 }
+
 function errorHandler(error, req, res) {
   res.status(500).render('pages/error');
 }
@@ -46,7 +47,7 @@ function getOneBook(req,res) {
 
   return client.query(SQL, searchValues)
     .then( result => {
-      return res.render('pages/detail-view', {book: result.row[0]});
+      return res.render('pages/books/show', {book: result.row[0]});
     })
     .catch( err => console.log(err));
 }
@@ -63,9 +64,11 @@ function Book(info) {
   this.bookshelf = bookshelf;
 }
 //Add a book to the DB
-function addABook(req, res) {
-  res.render("pages/index");
-  console.log("addBooks()".req.body);
+function getBookForm(req, res) {
+  res.render("pages/searches/new");
+}
+function addBook(req,res){
+  // console.log("addBooks()".req.body);
   let {book_id, title, author, isbn, image_url, description, bookshelf} = req.body;
   let SQL = "INSERT into books(book_id, title, author, isbn, image_url, description, bookshelf) VALUES ($1,$2,$3,$4,$5,$6,$7);";
   searchValues = [
@@ -80,44 +83,47 @@ function addABook(req, res) {
 
   return client
     .query(SQL, searchValues)
-    .then(res.redirect('/'))
+    .then(res.redirect('pages/index'))
     .catch(err => console.log(err));
 }
 
 //search for books in DB or from Google
 function searchForBooks(req,res) {
-  
   const thingUserSearchFor = req.body.search[0];
   const typeOfSearch =  req.body.search[1];
-  let ABC = `SELECT * FROM books WHERE title = ${thingUserSearchFor} `;
+  let ABC = `SELECT * FROM books WHERE title OR author = ${thingUserSearchFor} `;
   client.query(ABC, thingUserSearchFor).then(result => {
     if(result.rowCount) {
       console.log('Book Found!')
-      let book = new Book(thingUserSearchFo, result);
-      res.status(200).redirect('/')
+      let book = new Book(thingUserSearchFor, result);
+      res.status(200).render('pages/index')
     } else {
       console.log('No Match Found')
-        // let dataValue = [req.query.data];
-        let url = `https://www.googleapis.com/books/v1/volumes?q=`;
+      // let dataValue = [req.query.data];
+      let url = `https://www.googleapis.com/books/v1/volumes?q=`;
 
-        if (typeOfSearch === "title") {
-          url += `+intitle:${thingUserSearchFor}`;
-        }
-        if (typeOfSearch === "author") {
-          url += `+inauthor:${thingUserSearchFor}`;
-        }
+      if (typeOfSearch === "title") {
+        url += `+intitle:${thingUserSearchFor}`;
+      }
+      if (typeOfSearch === "author") {
+        url += `+inauthor:${thingUserSearchFor}`;
+      }
 
-        superagent
-          .get(url)
-          .then(apiResponse => apiResponse.body.items.map(result => new Book(result)))
-          .then(results =>
-            res.status(200).render("pages/searches/show", { searchResults: results })
-          )
-          .catch(error => errorHandler(error, req, res));
-          }
+      superagent
+        .get(url)
+        .then(apiResponse => {
+          let newBook = apiResponse.body.items.map(result => new Book(result))
+          
+        }).then(results => {
+          
+          res.status(200).render("pages/index", { searchResults: results });
+          addBook(results);
+        }
+          
+        )
+        .catch(error => errorHandler(error, req, res));
+        }
   })
-
-
 }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

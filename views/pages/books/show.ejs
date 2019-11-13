@@ -28,18 +28,10 @@
   </header>
   <div class="wrapper">
     <main>
-      <h3 class="page-title">Search Results </h3>
+      <h3 class="page-title">Search Results</h3>
 
       <div id="bookList">
-        <% results.forEach( book => { %>
-        <div class="book-template">
-          <%= results.length %>
-          <img src="<%= book.image_url %>" alt="Book Cover">
-          <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4>
-          <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
-          <p id="book-desc"><%= book.description.substring(0, 150) %></p>
-        </div>
-        <% }); %>
+        <%- include('books/details') -%>
       </div>
     </main>
   </div>
@@ -47,16 +39,6 @@
   <footer>
 
   </footer>
-  <script>
-    function myFunction() {
-      var x = document.getElementById("navbar");
-      if (x.className === "navbar") {
-        x.className += " responsive";
-      } else {
-        x.className = "navbar";
-      }
-    }
-  </script>
 </body>
 
 </html>
