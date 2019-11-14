@@ -16,7 +16,7 @@
     <h1 class="brand">My Bookself</h1>
       <div>
         <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/">About</a>
+        <a class="nav-link" href="/searches/new">Search for Books</a>
         <a class="nav-link" href="/">Contact</a>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
           <i class="fa fa-bars"></i>
@@ -29,31 +29,25 @@
     <main>
       <h3 class="page-title">Search Results</h3>
       <div id="bookList">
+        <div class="book-template"></div>
         <% searchResults.forEach( book => { %>
-          <div class="book-template">
-            <img src="<%= book.image_url %>" alt="Book Cover">
-            <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4> 
-            <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
-            <p id="book-desc"><%= book.description.substring(0, 150) %></p>
+          <img src="<%= book.image_url %>" alt="Book Cover">
+          <li><%= book.title %></li>
+          <li><%= book.author %></li>
+          <li><p id="book-desc"><%= book.description.substring(0, 150) %></p></li>
+          <form action="/books" method="post">
+            <input name="title" value="<%= book.title %>" type="hidden">
+            <input name="author" value="<%= book.author %>" type="hidden">
+            <input name="description" value="<%= book.description %>" type="hidden">
+            <label for="">bookshelf: <input name="bookshelf" type="text"></label>
             <button type="submit">Select This Book</button>
+            </form>
           </div>
         <% }); %>
         </div>
         <!-- Hidden Form -->
-        <h2> Update Book Info </h2>
-        <form action="<%=`/update/${book.id}`%>" method="post">
-        
-          <input type="hidden" name="_method" value="put">
-        
-          <input type="text" name="title" value="<%- book.title %>">
-          <input type="text" name="author" value="<%-book.author%>" placeholder="Author">
-          <textarea name="description" placeholder="Description of the task" cols="30" rows="10"><%= book.description %></textarea>
-          <input name="bookshelf" placeholder="Enter a bookshelf"><%= book.bookshelf %>
-          <button type="submit">Update This Book</button>
-        </form>
 
     </main>
-  </div>
   
   <footer>
 

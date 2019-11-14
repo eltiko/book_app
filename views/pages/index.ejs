@@ -37,6 +37,7 @@
           <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4>
           <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
           <p id="book-desc"><%= book.description.substring(0, 150) %></p>
+          <a href="/books/<%= book.id %>"> View Details</a>
         </div>
         <% }); %>
       </div>
