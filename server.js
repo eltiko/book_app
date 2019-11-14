@@ -16,7 +16,7 @@ client.connect();
 client.on('error', err => console.error(err));
 app.set('view engine', 'ejs');
 
-//API Routes
+// //API Routes
 app.get('/', getBooks);
 app.post('/searches', searchForBooks); //add new book
 app.get('/searches/new', getBookForm); //book search form
@@ -34,15 +34,15 @@ function notFound(req, res) {
 function errorHandler(error, req, res) {
   res.status(500).render('pages/error');
 }
-//=========================================================
+// //=========================================================
 //check the database for books and display them 
 function getBooks(req,res) {
   let SQL = 'SELECT * FROM books;';
   client.query(SQL)
   .then( results => {
-    res.render('pages/index', { results:results.rows });
+    res.render('pages/index', { results:results.rows })
     if(!results.rowCount) {
-     res.render('pages/searches/new');
+     res.render('pages/searches/new')
     } 
   }).catch(err => console.log(err));
 }
@@ -60,18 +60,18 @@ function getOneBook(req,res) {
     })
     .catch( err => console.log(err));
 }
-let booksArr = [];
+let booksArray = [];
 //Book constuctor 
 function Book(info) {
   this.title = info.volumeInfo.title || 'No title available';
   this.book_id = info.id;
-  this.image_url = `https://books.google.com/books?id=${info.book_id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`;
+  this.image_url = `http://books.google.com/books/content?id=${this.book_id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`;
   this.author = info.volumeInfo.authors || 'Author(s) Not available';
   this.description = info.volumeInfo.description || 'Description Not available';
   this.isbn = info.volumeInfo.industryIdentifiers[0].identifier;
-  this.bookshelf = bookshelf;
-  booksArr.push(this);
-  console.log(booksArr);
+  // this.bookshelf = bookshelf
+  // console.log(this);
+  booksArray.push(this);
 }
 //Add a book to the DB
 function getBookForm(req, res) {
@@ -97,50 +97,23 @@ function createBook(req,res){
 
 //search for books in Google
 function searchForBooks(req, res) {
+  console.log('I am inside of this function')
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
-  // console.log(req.body);
   // console.log(req.body.search);
 
   if (req.body.search[1] === 'title') { url += `+intitle:${req.body.search[0]}`; }
   if (req.body.search[1] === 'author') { url += `+inauthor:${req.body.search[0]}`; }
-console.log(url);
-  superagent
-    .get(url)
-    .then(apiResponse =>
-      apiResponse.body.items.map(bookResult => {
-        console.log('helllllllooooooo')
-        let bookArray = new Book(bookResult);
-        console.log(bookArray);
-      })
-    )
-    .then(booksArr => res.render("pages/searches/show", { arrItems: booksArr }))
-    .catch(err => console.log(err));
+ superagent
+   .get(url)
+   .then(apiResponse =>
+     apiResponse.body.items.map(result => new Book(result))
+   )
+   .then(results =>
+     res.render("pages/searches/show", { searchResults: booksArray })
+  ).catch(err => console.log(err));
+  //  .catch(error => errorHandler(error, req, res));
 }
-// function searchForBooks(req, res) {
-//   const thingUserSearchFor = req.body.search[0];
-//   const typeOfSearch =  req.body.search[1];
-//   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
-//   console.log(req.body);
-//   console.log(req.body.search);
-
-//   if (typeOfSearch === 'title') {
-//     url += `+intitle:${thingUserSearchFor}`;
-//   }
-//   if (typeOfSearch === 'author') {
-//     url += `+inauthor:${thingUserSearchFor}`;
-//   }
-//   superagent
-//     .get(url)
-//     .then(apiResponse =>
-//       apiResponse.body.items.map(result => new Book(result.VolumeInfo))
-//     )
-//     .then(booksArr =>
-//       res.render("pages/searches/show", { searchResults: booksArr })
-//     )
-//     // .catch(error => errorHandler(error, req, res));
-//     .catch(err => console.log(err));
-// }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
