@@ -22,7 +22,7 @@ app.post('/searches', searchForBooks); //add new book
 app.get('/searches/new', getBookForm); //book search form
 
 app.post('/books', createBook);
-app.get('/books/:id', getOneBook);
+app.get('/books/:book_id', getOneBook);
 
 app.use('*', notFound);
 app.use(errorHandler);
@@ -50,13 +50,13 @@ function getBooks(req,res) {
 //get a book from the databased on id
 function getOneBook(req,res) {
   let SQL = 'SELECT * FROM books WHERE id=$1;';
-  let searchValues = [req.params.id];
+  let searchValues = [req.params.book_id];
 
   return client.query(SQL, searchValues)
     .then( result => {
-      return res.render(`pages/books/${result.rows[0].id}`, {
-        book: result.row[0]
-      });
+      // let foundBook = result.rows[0];
+      // console.log(foundBook);
+     return res.render(`pages/books/show`, { book: result.rows[0] });
     })
     .catch( err => console.log(err));
 }

@@ -35,9 +35,23 @@
             <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4> 
             <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
             <p id="book-desc"><%= book.description.substring(0, 150) %></p>
+            <button type="submit">Select This Book</button>
           </div>
         <% }); %>
         </div>
+        <!-- Hidden Form -->
+        <h2> Update Book Info </h2>
+        <form action="<%=`/update/${book.id}`%>" method="post">
+        
+          <input type="hidden" name="_method" value="put">
+        
+          <input type="text" name="title" value="<%- book.title %>">
+          <input type="text" name="author" value="<%-book.author%>" placeholder="Author">
+          <textarea name="description" placeholder="Description of the task" cols="30" rows="10"><%= book.description %></textarea>
+          <input name="bookshelf" placeholder="Enter a bookshelf"><%= book.bookshelf %>
+          <button type="submit">Update This Book</button>
+        </form>
+
     </main>
   </div>
   
