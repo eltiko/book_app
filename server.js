@@ -3,56 +3,64 @@ require('dotenv').config();
 
 const express = require('express');
 const superagent = require('superagent');
-const pg = require("pg");
+const pg = require('pg');
 require('ejs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:true}));//access request.body
 app.use(express.static(__dirname + '/public'));
 
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
-client.on("error", err => console.error(err));
+client.on('error', err => console.error(err));
 app.set('view engine', 'ejs');
 
 //API Routes
 app.get('/', getBooks);
+app.post('/searches', searchForBooks); //add new book
+app.get('/searches/new', getBookForm); //book search form
+
+app.post('/books', createBook);
 app.get('/books/:id', getOneBook);
-app.get("/searches/new", getBookForm); //book search form
-app.post('/searches/new', searchForBooks); //add new book
 
 app.use('*', notFound);
 app.use(errorHandler);
 
-//Error handling
+// Error handling
 function notFound(req, res) {
   res.status(404).render('pages/error');
 }
-
 function errorHandler(error, req, res) {
   res.status(500).render('pages/error');
 }
-///=========================================================
+//=========================================================
+//check the database for books and display them 
 function getBooks(req,res) {
   let SQL = 'SELECT * FROM books;';
-  return client.query(SQL)
-    .then( results => res.render('pages/searches/show', {results: results.rows}))
-    .catch(err => console.log(err));
+  client.query(SQL)
+  .then( results => {
+    res.render('pages/index', { results:results.rows });
+    if(!results.rowCount) {
+     res.render('pages/searches/new');
+    } 
+  }).catch(err => console.log(err));
 }
 
+//get a book from the databased on id
 function getOneBook(req,res) {
   let SQL = 'SELECT * FROM books WHERE id=$1;';
-  let searchValues = [req.params.book_id];
+  let searchValues = [req.params.id];
 
   return client.query(SQL, searchValues)
     .then( result => {
-      return res.render('pages/books/show', {book: result.row[0]});
+      return res.render(`pages/books/${result.rows[0].id}`, {
+        book: result.row[0]
+      });
     })
     .catch( err => console.log(err));
 }
-
-
+let booksArr = [];
 //Book constuctor 
 function Book(info) {
   this.title = info.volumeInfo.title || 'No title available';
@@ -62,68 +70,77 @@ function Book(info) {
   this.description = info.volumeInfo.description || 'Description Not available';
   this.isbn = info.volumeInfo.industryIdentifiers[0].identifier;
   this.bookshelf = bookshelf;
+  booksArr.push(this);
+  console.log(booksArr);
 }
 //Add a book to the DB
 function getBookForm(req, res) {
-  res.render("pages/searches/new");
+  res.render('pages/searches/new');
 }
-function addBook(req,res){
-  // console.log("addBooks()".req.body);
-  let {book_id, title, author, isbn, image_url, description, bookshelf} = req.body;
-  let SQL = "INSERT into books(book_id, title, author, isbn, image_url, description, bookshelf) VALUES ($1,$2,$3,$4,$5,$6,$7);";
-  searchValues = [
-    book_id,
-    title,
-    author,
-    isbn,
-    image_url,
-    description,
-    bookshelf
-  ];
 
-  return client
-    .query(SQL, searchValues)
-    .then(res.redirect('pages/index'))
+function createBook(req,res){
+  let {book_id, title, author, isbn, image_url, description, bookshelf} = req.body;
+  let SQL = 'INSERT INTO books(book_id, title, author, isbn, image_url, description, bookshelf) VALUES ($1,$2,$3,$4,$5,$6,$7);';
+  saveValues = [book_id, title, author, isbn, image_url, description, bookshelf];
+  client.query(SQL, saveValues)
+    .then(()  => {
+      SQL = 'SELECT * from books WHERE isbn = $4;';
+      saveValues = [req.body.isbn];
+    })
+    client.query(SQL, saveValues)
+      .then(result => {
+        res.redirect(`/books/${result.rows[0].id}`)
+      }) 
+    .catch(err => console.log(err));
+
+}
+
+//search for books in Google
+function searchForBooks(req, res) {
+  let url = 'https://www.googleapis.com/books/v1/volumes?q=';
+
+  // console.log(req.body);
+  // console.log(req.body.search);
+
+  if (req.body.search[1] === 'title') { url += `+intitle:${req.body.search[0]}`; }
+  if (req.body.search[1] === 'author') { url += `+inauthor:${req.body.search[0]}`; }
+console.log(url);
+  superagent
+    .get(url)
+    .then(apiResponse =>
+      apiResponse.body.items.map(bookResult => {
+        console.log('helllllllooooooo')
+        let bookArray = new Book(bookResult);
+        console.log(bookArray);
+      })
+    )
+    .then(booksArr => res.render("pages/searches/show", { arrItems: booksArr }))
     .catch(err => console.log(err));
 }
+// function searchForBooks(req, res) {
+//   const thingUserSearchFor = req.body.search[0];
+//   const typeOfSearch =  req.body.search[1];
+//   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
-//search for books in DB or from Google
-function searchForBooks(req,res) {
-  const thingUserSearchFor = req.body.search[0];
-  const typeOfSearch =  req.body.search[1];
-  let ABC = `SELECT * FROM books WHERE title OR author = ${thingUserSearchFor} `;
-  client.query(ABC, thingUserSearchFor).then(result => {
-    if(result.rowCount) {
-      console.log('Book Found!')
-      let book = new Book(thingUserSearchFor, result);
-      res.status(200).render('pages/index')
-    } else {
-      console.log('No Match Found')
-      // let dataValue = [req.query.data];
-      let url = `https://www.googleapis.com/books/v1/volumes?q=`;
+//   console.log(req.body);
+//   console.log(req.body.search);
 
-      if (typeOfSearch === "title") {
-        url += `+intitle:${thingUserSearchFor}`;
-      }
-      if (typeOfSearch === "author") {
-        url += `+inauthor:${thingUserSearchFor}`;
-      }
-
-      superagent
-        .get(url)
-        .then(apiResponse => {
-          let newBook = apiResponse.body.items.map(result => new Book(result))
-          
-        }).then(results => {
-          
-          res.status(200).render("pages/index", { searchResults: results });
-          addBook(results);
-        }
-          
-        )
-        .catch(error => errorHandler(error, req, res));
-        }
-  })
-}
+//   if (typeOfSearch === 'title') {
+//     url += `+intitle:${thingUserSearchFor}`;
+//   }
+//   if (typeOfSearch === 'author') {
+//     url += `+inauthor:${thingUserSearchFor}`;
+//   }
+//   superagent
+//     .get(url)
+//     .then(apiResponse =>
+//       apiResponse.body.items.map(result => new Book(result.VolumeInfo))
+//     )
+//     .then(booksArr =>
+//       res.render("pages/searches/show", { searchResults: booksArr })
+//     )
+//     // .catch(error => errorHandler(error, req, res));
+//     .catch(err => console.log(err));
+// }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
