@@ -17,7 +17,7 @@
       <h1 class="brand">My Bookself</h1>
       <div>
         <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/">About</a>
+        <a class="nav-link" href="/searches/new">Search</a>
         <a class="nav-link" href="/">Contact</a>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
           <i class="fa fa-bars"></i>
@@ -37,10 +37,13 @@
           <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4>
           <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
           <p id="book-desc"><%= book.description.substring(0, 150) %></p>
+          <a href="/books/<%= book.id %>"> View Details</a>
         </div>
         <% }); %>
       </div>
     </main>
+    <!-- Hidden Form -->
+    
   </div>
 
   <footer>
