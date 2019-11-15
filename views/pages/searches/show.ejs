@@ -36,9 +36,12 @@
           <li><%= book.author %></li>
           <li><p id="book-desc"><%= book.description.substring(0, 150) %></p></li>
           <form action="/books" method="post">
+            <input name="book_id" value="<%= book.book_id %>" type="hidden">
             <input name="title" value="<%= book.title %>" type="hidden">
             <input name="author" value="<%= book.author %>" type="hidden">
             <input name="description" value="<%= book.description %>" type="hidden">
+            <input name="isbn" value="<%= book.isbn %>" type="hidden">
+            <input name="image_url" value="<%= book.image_url %>" alt="Book Cover" type="hidden">
             <label for="">bookshelf: <input name="bookshelf" type="text"></label>
             <button type="submit">Select This Book</button>
             </form>

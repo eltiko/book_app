@@ -24,7 +24,7 @@ client.connect();
 client.on('error', err => console.error(err));
 app.set('view engine', 'ejs');
 
-// //API Routes
+//API Routes
 app.get('/', getBooks);
 app.post('/searches', searchForBooks); //add new book
 app.get('/searches/new', getBookForm); //book search form
@@ -59,28 +59,26 @@ function getBooks(req,res) {
 
 //get a book from the databased on id
 function getOneBook(req,res) {
+   console.log('I viewed a book');
   let SQL = 'SELECT * FROM books WHERE id=$1;';
   let searchValues = [req.params.book_id];
 
   return client.query(SQL, searchValues)
     .then( result => {
-      // let foundBook = result.rows[0];
-      // console.log(foundBook);
-     return res.render(`pages/books/show`, { book: result.rows[0] });
+      return res.render(`pages/books/show`, { book: result.rows[0] });
     })
     .catch( err => console.log(err));
 }
 let booksArray = [];
 //Book constuctor 
 function Book(info) {
-  this.title = info.volumeInfo.title || 'No title available';
   this.book_id = info.id;
-  this.image_url = `http://books.google.com/books/content?id=${this.book_id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`;
+  this.title = info.volumeInfo.title || 'No title available';
   this.author = info.volumeInfo.authors || 'Author(s) Not available';
-  this.description = info.volumeInfo.description || 'Description Not available';
+  this.image_url = `http://books.google.com/books/content?id=${info.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api` || 'http://placehold.it/200x300';
   this.isbn = info.volumeInfo.industryIdentifiers[0].identifier;
-  // this.bookshelf = bookshelf
-  // console.log(info.volumeInfo.industryIdentifiers);
+  this.description = info.volumeInfo.description || 'Description Not available';
+  // console.log(this.image_url);
   booksArray.push(this);
 }
 //Add a book to the DB
@@ -89,26 +87,26 @@ function getBookForm(req, res) {
 }
 //save book to a database
 function createBook(req,res){
+   console.log('I created a book');
   let {book_id, title, author, isbn, image_url, description, bookshelf} = req.body;
   let SQL = 'INSERT INTO books(book_id, title, author, isbn, image_url, description, bookshelf) VALUES ($1,$2,$3,$4,$5,$6,$7);';
   let saveValues = [book_id, title, author, isbn, image_url, description, bookshelf];
   client.query(SQL, saveValues)
     .then(()  => {
-      SQL = "SELECT * from books WHERE book_id = $1;";
+      SQL = 'SELECT * from books WHERE book_id=$1;';
       saveValues = [req.body.book_id];
-    })
     client.query(SQL, saveValues)
       .then(result => {
-        console.log('a new book', result.rows)
-        res.redirect('/')
-      }) 
+        console.log(result.rows[0])
+        res.redirect(`/books/${result.rows[0].id}`)
+    }) 
+  }) 
     .catch(err => console.log(err));
-
 }
 
 //search for books in Google
 function searchForBooks(req, res) {
-  console.log('I am inside of this function');
+  console.log('I searched for books');
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
   // console.log(req.body);
@@ -120,8 +118,11 @@ function searchForBooks(req, res) {
    .then(apiResponse =>
      apiResponse.body.items.map(result => new Book(result))
    )
-   .then(results =>
-     res.render("pages/searches/show", {searchResults: booksArray})
+   .then(results => {
+      res.render('pages/searches/show', { searchResults: booksArray })
+      // console.log(booksArray);
+   }
+    
   ).catch(err => console.log(err));
   //  .catch(error => errorHandler(error, req, res));
 }
@@ -138,4 +139,5 @@ function updateBook(req, res) {
     .then(res.redirect(`/books/${req.params.book}`))
     .catch(err => handleError(err, res));
 }
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
