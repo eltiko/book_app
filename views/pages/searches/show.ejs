@@ -7,9 +7,7 @@
   <link rel="stylesheet" href="/styles/layout.css">
   <link rel="stylesheet" href="/styles/modules.css">
   <link rel="stylesheet" href="/styles/icons.css">
-  
 </head>
-
 <body>
   <header>
     <div class="navbar" id="navbar">
@@ -23,48 +21,63 @@
         </a>
       </div>
     </div>
-
   </header>
-  <div class="wrapper">
+  <div class="wrapper"></div>
     <main>
       <h3 class="page-title">Search Results</h3>
       <div id="bookList">
-        <div class="book-template"></div>
-        <% searchResults.forEach( book => { %>
+        <!-- <% searchResults.forEach( book => { %>
+        <div id="book-template">
           <img src="<%= book.image_url %>" alt="Book Cover">
-          <li><%= book.title %></li>
-          <li><%= book.author %></li>
-          <li><p id="book-desc"><%= book.description.substring(0, 150) %></p></li>
-          <form action="/books" method="post">
-            <input name="book_id" value="<%= book.book_id %>" type="hidden">
-            <input name="title" value="<%= book.title %>" type="hidden">
-            <input name="author" value="<%= book.author %>" type="hidden">
-            <input name="description" value="<%= book.description %>" type="hidden">
-            <input name="isbn" value="<%= book.isbn %>" type="hidden">
+          <h4 id="book-title"><span>Title: </span> <%= book.title.substring(0, 50) %></h4>
+          <h5 id="book-author"><span> Author:</span> <%= book.author %></h5>
+          <p id="book-desc"><%= book.description.substring(0, 150) %></p>
+          <button id="add-book">Select This Book</button>
+        </div>
+       
+          <form class="new-book" action="/books" method="POST">
+            <input name="book_id" value="<%= book.book_id %>" type="text">
+            <input name="title" value="<%= book.title %>" type="text">
+            <input name="author" value="<%= book.author %>" type="text">
+            <textarea name="description" value="<%= book.description %>" cols="30"
+            rows="10"><%- book.description %></textarea>
+            <input name="isbn" value="<%= book.isbn %>" type="text">
             <input name="image_url" value="<%= book.image_url %>" alt="Book Cover" type="hidden">
-            <label for="">bookshelf: <input name="bookshelf" type="text"></label>
-            <button type="submit">Select This Book</button>
+            <input type="text" name="bookshelf" value="<%- book.bookshelf %>" placeholder="Enter a Bookshelf">
+            <button type="submit">Add This Book</button>
+          </form>
+        <% }); %> -->
+        <% searchResults.forEach(book => { %>
+          <div id="book-template">
+            <p>Title: <%= book.title %></p>
+            <img src="<%= book.image_url %>" alt="Book Cover">
+            <p>Author: <%= book.authors %></p>
+            <p>Description: <%= book.description.substring(0, 150) %></p>
+            <button id="edit-button" class="select-btn">Select This Book</button>
+
+            
+            <form action="/books" method="POST" class="formfield" id="addition">
+              <input name="id" value="<%= book.book_id %>">
+              <input name="title" value="<%= book.title %>">
+              <input name="authors" value=" <%= book.authors %>">
+              <label for="isbn">ISBN:</label>
+              <input name="isbn" value=" <%= book.isbn %>">
+              <input name="image_url" value=" <%= book.thumbnail %>">
+              <textarea name="description" value=" <%= book.description %>"><%- book.description %></textarea>
+              <label for="bookshelf">Bookshelf:</label>
+              <input name="bookshelf" value=" <%= book.bookshelf %>">
+              <button type="submit"> Add Book!</button>
             </form>
+            
           </div>
         <% }); %>
-        </div>
-        
-
+      </div>    
     </main>
-  
-  <footer>
-
-  </footer>
-<script>
-  function myFunction() {
-    var x = document.getElementById("navbar");
-    if (x.className === "navbar") {
-      x.className += " responsive";
-    } else {
-      x.className = "navbar";
-    }
-  }
-</script>
+  </div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+  </script>
+<script src="/app.js"></script>
 </body>
 
 </html>

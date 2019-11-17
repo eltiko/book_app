@@ -98,7 +98,7 @@ function createBook(req,res){
     client.query(SQL, saveValues)
       .then(result => {
         console.log(result.rows[0])
-        res.redirect(`/books/${result.rows[0].id}`)
+        res.redirect(`/books/${result.rows[0].book_id}`)
     }) 
   }) 
     .catch(err => console.log(err));
@@ -111,8 +111,8 @@ function searchForBooks(req, res) {
 
   // console.log(req.body);
 
-  if (req.body.search[1] === 'title') { url += `+intitle:${req.body.search[0]}`; }
-  if (req.body.search[1] === 'author') { url += `+inauthor:${req.body.search[0]}`; }
+  if (req.body.search[1] === 'title') { url += `+intitle:${req.body.search[0]}&max-results=10`; }
+  if (req.body.search[1] === 'author') { url += `+inauthor:${req.body.search[0]}&max-results=10`; }
  superagent
    .get(url)
    .then(apiResponse =>
@@ -136,7 +136,7 @@ function updateBook(req, res) {
   let values = [book_id, title, author, isbn, image_url, description, bookshelf, req.params.book_id];
 
   client.query(SQL, values)
-    .then(res.redirect(`/books/${req.params.book}`))
+    .then(res.redirect(`/books/${req.params.book_id}`))
     .catch(err => handleError(err, res));
 }
 

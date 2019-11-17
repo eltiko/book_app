@@ -33,7 +33,7 @@ ul {
     display: block;
     text-align: left;
   }
-  .book-template {
+  #book-template {
     border: 1px solid whitesmoke;
     padding: 40px;
     margin: 20px auto;
@@ -100,16 +100,13 @@ ul {
     text-decoration: none;
     font-size: 17px;
   }
-  .wrapper {
-    /* margin: 0 auto; */
-  }
   #bookList {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
   }
-  .book-template {
-    width: 300px;
+  #book-template {
+    width: 350px;
     border: 1px solid whitesmoke;
     padding: 40px;
     margin: 20px auto;

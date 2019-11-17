@@ -3,6 +3,11 @@
     <img src="<%= book.image_url %>" alt="Book Cover">
     <h1 id="book-title"><span>Title: </span> <%= book.title %></h1>
     <h2 id="book-author"><span> Author:</span> <%= book.author %></h2>
+    
     <p id="book-desc"><%= book.description %></p>
   <!-- </div> -->
+  <div id="book-meta">
+    <h2 id="book-isbn"><span> ISBN:</span> <%= book.isbn %></h2>
+    <h2 id="book-bookshelf"><span> Bookshelf:</span> <%= book.bookshelf %></h2>
+  </div>
 </section>
